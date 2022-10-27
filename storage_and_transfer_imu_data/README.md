@@ -8,7 +8,7 @@ Os arquivos serão armazenados com nome *n.txt*, com n=0,1,2,...
 
 Após upar o código *storage_imu.ino*, basta apertar o botão home do M5StickC. O início da gravação dos dados da IMU serão indicados por sinal vermelho no display.
 
-# Transfências do arquivos
+# Transfências do arquivos utilizando Serial
 ### Utilizar os códigos na pasta *send_files_serial*
 Possui código referente para a transferência dos arquivos da IMU gravados no M5StickC para o computador atráves utilizando Serial (usb).
 Para realizar a transferência:
@@ -22,3 +22,6 @@ Para realizar a transferência:
 3. Para iniciar a transferência, aperte e solte o botão home do M5StickC
 
 <span style="color: red">Importante: *serial_port.py* deve ser executado antes de iniciar a transferência</span>
+
+# Transfências do arquivos utilizando conexão WiFi
+Em desenvolvimento
