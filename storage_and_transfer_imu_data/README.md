@@ -22,6 +22,3 @@ Para realizar a transferência:
 3. Para iniciar a transferência, aperte e solte o botão home do M5StickC
 
 <span style="color: red">Importante: *serial_port.py* deve ser executado antes de iniciar a transferência</span>
-
-# Transfências do arquivos utilizando conexão WiFi
-Em desenvolvimento
