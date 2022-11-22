@@ -9,18 +9,16 @@
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-// Configure the name and password of the connected wifi and your MQTT Serve
-const char* ssid        = "Valdeni";
-const char* password    = "troqueiAsenha*";
+// Configurar a rede WiFi
+const char* ssid        = "nome_da_rede_wifi";
+const char* password    = "senha_rede_wifi";
+
 const char* mqtt_server = "mqtt.m5stack.com";
 const char* topic = "IMUTRANSFER";
 
 unsigned long COLLECT_TIME = 60000;
 
 unsigned long lastMsg = 0;
-// #define MSG_BUFFER_SIZE (100)
-// char msg[MSG_BUFFER_SIZE];
-// int value = 0;
 String msg;
 long value = 0;
 
@@ -79,8 +77,10 @@ void callback(char* topic, byte* payload, unsigned int length) {
     M5.Lcd.print(topic);
     M5.Lcd.println("]");
     if(length == 1) {
+      Serial.println("Enviando dados!");
       collect = true;
       startTime = millis() - 5;
+      value = 0;
     }
 }
 
@@ -147,6 +147,11 @@ void loop() {
 
       // Wait 1s
       if (now - lastMsg > 1000) {
+          if (value % 4 == 0) {
+              M5.Lcd.fillScreen(BLACK);
+              M5.Lcd.setCursor(0, 0);
+          }
+
           ++value;
           lastMsg = now;
           getImuData();
@@ -158,11 +163,6 @@ void loop() {
           Serial.println(charMsg);        
           client.publish(topic, charMsg);  // Publishes a message to the specified topic.
           // client.publish(topic, "Hello");
-
-          if (value % 4 == 0) {
-              M5.Lcd.fillScreen(BLACK);
-              M5.Lcd.setCursor(0, 0);
-          }
       }
     }
 }

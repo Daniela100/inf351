@@ -65,12 +65,15 @@ client.loop_stop()
 client.disconnect()
 
 print("Tempo de envio esgotado")
+
+print("\n\nARMAZENANDO DADOS EM 'IMU_DATA/", end='')
 if len(data) > 0:
     now = datetime.now()
     formatNow = now.strftime("%d-%m-%Y_%H:%M:%S")
-
+    print(formatNow + ".csv'\n")
     data = data.split("?")
-    with open(f'IMU_DATA/{formatNow}.csv', 'w') as csvfile:
+    with open(f'IMU_DATA/{formatNow}.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile, delimiter=',')
-        for line in data:
-            writer.writerow(line)
+        for i in range(len(data)-1):
+            splitLine = data[i].split(',')
+            writer.writerow(splitLine)
