@@ -8,8 +8,8 @@
 - [ ] Mover Olho com Acelerômetro
 
 ## Jogos no M5StickC
-- [ ] Space Invaders
-- [ ] Flappy Bird
+- [x] Space Invaders
+- [x] Flappy Bird
 - [ ] Snake
 - [ ] Tetris
 - [ ] Breakout
