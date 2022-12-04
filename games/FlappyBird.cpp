@@ -1,100 +1,74 @@
-// By Ponticelli Domenico.
-// 12NOV2020 EEPROM Working now, Modified by Zontex
-// https://github.com/pcelli85/M5Stack_FlappyBird_game
+#include "FlappyBird.h"
 
-#include <EEPROM.h>
-#include <M5StickC.h>
+FlappyBird::FlappyBird() {
+  EEPROM.begin(1000);
+  address = 0;
+  maxScore = EEPROM.readInt(address);
+  pinMode(M5_BUTTON_HOME, INPUT);
+}
 
-#define TFTW  80   // screen width
-#define TFTH  160  // screen height
-#define TFTW2 40   // half screen width
-#define TFTH2 80   // half screen height
-// game constant
-#define SPEED         1
-#define GRAVITY       9.8
-#define JUMP_FORCE    2.15
-#define SKIP_TICKS    20.0  // 1000 / 50fps
-#define MAX_FRAMESKIP 5
-// bird size
-#define BIRDW  8  // bird width
-#define BIRDH  8  // bird height
-#define BIRDW2 4  // half width
-#define BIRDH2 4  // half height
-// pipe size
-#define PIPEW     15  // pipe width
-#define GAPHEIGHT 30  // pipe gap height
-// floor size
-#define FLOORH 20  // floor height (from bottom of the screen)
-// grass size
-#define GRASSH 4  // grass height (inside floor, starts at floor y)
+string FlappyBird::getName() { return "Flappy Bird"; }
 
-int address         = 0;
-int maxScore        = EEPROM.readInt(address);
-const int buttonPin = 2;
-// background
-const unsigned int BCKGRDCOL = M5.Lcd.color565(138, 235, 244);
-// bird
-const unsigned int BIRDCOL = M5.Lcd.color565(255, 254, 174);
-// pipe
-const unsigned int PIPECOL = M5.Lcd.color565(99, 255, 78);
-// pipe highlight
-const unsigned int PIPEHIGHCOL = M5.Lcd.color565(250, 255, 250);
-// pipe seam
-const unsigned int PIPESEAMCOL = M5.Lcd.color565(0, 0, 0);
-// floor
-const unsigned int FLOORCOL = M5.Lcd.color565(246, 240, 163);
-// grass (col2 is the stripe color)
-const unsigned int GRASSCOL  = M5.Lcd.color565(141, 225, 87);
-const unsigned int GRASSCOL2 = M5.Lcd.color565(156, 239, 88);
+void FlappyBird::gameInit() {
+    M5.Lcd.fillScreen(TFT_BLACK);
+    M5.Lcd.fillRect(0, TFTH2 - 10, TFTW, 1, TFT_WHITE);
+    M5.Lcd.fillRect(0, TFTH2 + 15, TFTW, 1, TFT_WHITE);
+    M5.Lcd.setTextColor(TFT_WHITE);
+    M5.Lcd.setTextSize(1);
+    // half width - num char * char width in pixels
+    M5.Lcd.setCursor(TFTW2 - 15, TFTH2 - 6);
+    M5.Lcd.println("FLAPPY");
+    M5.Lcd.setTextSize(1);
+    M5.Lcd.setCursor(TFTW2 - 15, TFTH2 + 6);
+    M5.Lcd.println("-BIRD-");
+    M5.Lcd.setTextSize(1);
+    M5.Lcd.setCursor(15, TFTH2 - 21);
+    M5.Lcd.println("M5StickC");
+    M5.Lcd.setCursor(TFTW2 - 40, TFTH2 + 21);
+    M5.Lcd.println("please press home");
+    while (1) {
+        // wait for push button
+        if (digitalRead(M5_BUTTON_HOME) == LOW) {
+            while (digitalRead(M5_BUTTON_HOME) == LOW)
+                ;
+            break;
+        }
+    }
 
-// bird sprite
-// bird sprite colors (Cx name for values to keep the array readable)
-#define C0 BCKGRDCOL
-#define C1 M5.Lcd.color565(195, 165, 75)
-#define C2 BIRDCOL
-#define C3 TFT_WHITE
-#define C4 TFT_RED
-#define C5 M5.Lcd.color565(251, 216, 114)
+    // clear screen
+    M5.Lcd.fillScreen(BCKGRDCOL);
+    // reset score
+    score = 0;
+    // init bird
+    bird.x = 30;
+    bird.y = bird.old_y = TFTH2 - BIRDH;
+    bird.vel_y          = -JUMP_FORCE;
+    tmpx = tmpy = 0;
+    // generate new random seed for the pipe gape
+    randomSeed(analogRead(0));
+    // init pipe
+    pipes.x     = 0;
+    pipes.gap_y = random(20, TFTH - 60);
+}
 
-static unsigned int birdcol[] = {
-    C0, C0, C1, C1, C1, C1, C1, C0, C0, C0, C1, C1, C1, C1, C1, C0, C0, C1, C2,
-    C2, C2, C1, C3, C1, C0, C1, C2, C2, C2, C1, C3, C1, C0, C2, C2, C2, C2, C1,
-    C3, C1, C0, C2, C2, C2, C2, C1, C3, C1, C1, C1, C1, C2, C2, C3, C1, C1, C1,
-    C1, C1, C2, C2, C3, C1, C1, C1, C2, C2, C2, C2, C2, C4, C4, C1, C2, C2, C2,
-    C2, C2, C4, C4, C1, C2, C2, C2, C1, C5, C4, C0, C1, C2, C2, C2, C1, C5, C4,
-    C0, C0, C1, C2, C1, C5, C5, C5, C0, C0, C1, C2, C1, C5, C5, C5, C0, C0, C0,
-    C1, C5, C5, C5, C0, C0, C0, C0, C1, C5, C5, C5, C0, C0};
+void FlappyBird::game_init() {
+    // clear screen
+    M5.Lcd.fillScreen(BCKGRDCOL);
+    // reset score
+    score = 0;
+    // init bird
+    bird.x = 30;
+    bird.y = bird.old_y = TFTH2 - BIRDH;
+    bird.vel_y          = -JUMP_FORCE;
+    tmpx = tmpy = 0;
+    // generate new random seed for the pipe gape
+    randomSeed(analogRead(0));
+    // init pipe
+    pipes.x     = 0;
+    pipes.gap_y = random(20, TFTH - 60);
+}
 
-// bird structure
-static struct BIRD {
-    long x, y, old_y;
-    long col;
-    float vel_y;
-} bird;
-
-// pipe structure
-static struct PIPES {
-    long x, gap_y;
-    long col;
-} pipes;
-
-// score
-int score;
-// temporary x and y var
-static short tmpx, tmpy;
-
-// ---------------
-// draw pixel
-// ---------------
-// faster drawPixel method by inlining calls and using setAddrWindow and
-// pushColor using macro to force inlining
-#define drawPixel(a, b, c)            \
-    M5.Lcd.setAddrWindow(a, b, a, b); \
-    M5.Lcd.pushColor(c)
-// ---------------
-// game loop
-// ---------------
-void game_loop() {
+void FlappyBird::game_loop() {
     // ===============
     // prepare game variables
     // draw floor
@@ -265,59 +239,7 @@ void game_loop() {
     delay(1200);
 }
 
-// ---------------
-// game start
-// ---------------
-void game_start() {
-    M5.Lcd.fillScreen(TFT_BLACK);
-    M5.Lcd.fillRect(0, TFTH2 - 10, TFTW, 1, TFT_WHITE);
-    M5.Lcd.fillRect(0, TFTH2 + 15, TFTW, 1, TFT_WHITE);
-    M5.Lcd.setTextColor(TFT_WHITE);
-    M5.Lcd.setTextSize(1);
-    // half width - num char * char width in pixels
-    M5.Lcd.setCursor(TFTW2 - 15, TFTH2 - 6);
-    M5.Lcd.println("FLAPPY");
-    M5.Lcd.setTextSize(1);
-    M5.Lcd.setCursor(TFTW2 - 15, TFTH2 + 6);
-    M5.Lcd.println("-BIRD-");
-    M5.Lcd.setTextSize(1);
-    M5.Lcd.setCursor(15, TFTH2 - 21);
-    M5.Lcd.println("M5StickC");
-    M5.Lcd.setCursor(TFTW2 - 40, TFTH2 + 21);
-    M5.Lcd.println("please press home");
-    while (1) {
-        // wait for push button
-        if (digitalRead(M5_BUTTON_HOME) == LOW) {
-            while (digitalRead(M5_BUTTON_HOME) == LOW)
-                ;
-            break;
-        }
-    }
-    // init game settings
-    game_init();
-}
-
-void game_init() {
-    // clear screen
-    M5.Lcd.fillScreen(BCKGRDCOL);
-    // reset score
-    score = 0;
-    // init bird
-    bird.x = 30;
-    bird.y = bird.old_y = TFTH2 - BIRDH;
-    bird.vel_y          = -JUMP_FORCE;
-    tmpx = tmpy = 0;
-    // generate new random seed for the pipe gape
-    randomSeed(analogRead(0));
-    // init pipe
-    pipes.x     = 0;
-    pipes.gap_y = random(20, TFTH - 60);
-}
-
-// ---------------
-// game over
-// ---------------
-void game_over() {
+void FlappyBird::game_over() {
     M5.Lcd.fillScreen(TFT_BLACK);
     maxScore = EEPROM.readInt(address);
 
@@ -341,7 +263,7 @@ void game_over() {
     M5.Lcd.print("score: ");
     M5.Lcd.print(score);
     M5.Lcd.setCursor(5, TFTH2 + 6);
-    M5.Lcd.println("press button");
+    M5.Lcd.println("press home to play again");
     M5.Lcd.setCursor(1, 21);
     M5.Lcd.print("Max Score:");
     M5.Lcd.print(maxScore);
@@ -353,26 +275,11 @@ void game_over() {
             break;
         }
     }
+
 }
 
-void resetMaxScore() {
-    EEPROM.writeInt(address, 0);
-    EEPROM.commit();
-}
-
-void setup() {
-    // put your setup code here, to run once:
-    M5.begin();
-    EEPROM.begin(1000);
-    pinMode(M5_BUTTON_HOME, INPUT);
-    // resetMaxScore();
-    Serial.println("last score:");
-    Serial.println(EEPROM.readInt(address));
-}
-
-void loop() {
-    // put your main code here, to run repeatedly:
-    game_start();
+void FlappyBird::gameLoop() {
+    game_init();
     game_loop();
     game_over();
 }
