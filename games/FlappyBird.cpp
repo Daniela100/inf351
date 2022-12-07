@@ -263,7 +263,7 @@ void FlappyBird::game_over() {
     M5.Lcd.print("score: ");
     M5.Lcd.print(score);
     M5.Lcd.setCursor(5, TFTH2 + 6);
-    M5.Lcd.println("press home to play again");
+    M5.Lcd.println("press home  to play again");
     M5.Lcd.setCursor(1, 21);
     M5.Lcd.print("Max Score:");
     M5.Lcd.print(maxScore);
@@ -279,6 +279,7 @@ void FlappyBird::game_over() {
 }
 
 void FlappyBird::gameLoop() {
+    // gameInit();
     game_init();
     game_loop();
     game_over();
