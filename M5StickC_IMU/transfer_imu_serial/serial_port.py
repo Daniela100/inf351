@@ -18,7 +18,7 @@ def serial_connect():
     exit()
 
 
-ROOT = '/home/daniela/Documentos/embarcados/storage_and_transfer_imu_data'
+ROOT = '/home/daniela/Documentos/embarcados/inf351/M5StickC_IMU/transfer_imu_serial'
 
 if ROOT.startswith('/path/to'):
     print('Altere o caminho indicado pela variável ROOT')
@@ -39,14 +39,14 @@ files_names = []
 # arduino.flush()
 while True:
     msg = str(arduino.readline())
-    # print(msg)
     msg = msg[2:-5]
-    print(msg)
+    # print(msg)
     # msg = msg.decode()
 
     if msg.startswith('f'):
         file_name = msg.split(',')
         file_name = file_name[1]
+        # print(file_name)
         
         file_path = f'{folder}/{file_name}'
         print("Salvando arquivo em: ", file_path)

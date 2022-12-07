@@ -6,9 +6,12 @@ from random import randint
 from datetime import datetime
 import csv
 
+# --- Variáveis que podem ser alteradas ---
 mqttBroker ="mqtt.m5stack.com"
-clientID = "PC" + str(randint(0, 1000000))
 topic = "IMUTRANSFER"
+# -----------------------------------------
+
+clientID = "PC" + str(randint(0, 1000000))
 tcpPort = 1883
 
 flagConnection = 0

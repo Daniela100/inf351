@@ -9,6 +9,7 @@
 WiFiClient espClient;
 PubSubClient client(espClient);
 
+// ------- Variáveis que podem ser alteradas -------
 // Configurar a rede WiFi
 const char* ssid        = "nome_da_rede_wifi";
 const char* password    = "senha_rede_wifi";
@@ -16,7 +17,9 @@ const char* password    = "senha_rede_wifi";
 const char* mqtt_server = "mqtt.m5stack.com";
 const char* topic = "IMUTRANSFER";
 
+// Tempo de coleta de dados (milisegundos)
 unsigned long COLLECT_TIME = 60000;
+// -------------------------------------------------
 
 unsigned long lastMsg = 0;
 String msg;
@@ -124,8 +127,6 @@ void loop() {
     if (!client.connected()) {
         reConnect();
     }
-
-
 
     client.loop();  // This function is called periodically to allow clients to
                     // process incoming messages and maintain connections to the

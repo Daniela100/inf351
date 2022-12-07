@@ -1,6 +1,3 @@
-// #include <M5StickC.h>
-// #include <string>
-
 #include <M5StickC.h>
 #include <Preferences.h>
 #include <SPIFFS.h>
