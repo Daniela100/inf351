@@ -1,1 +1,3 @@
-Código fonte: https://macsbug.wordpress.com/2019/05/08/m5stickc-electronic-animated-eyes/
+- Código fonte: https://macsbug.wordpress.com/2019/05/08/m5stickc-electronic-animated-eyes/
+- Para trocar o olho, descomentar uma das linhas de 8 a 11 e upar o código novamente
+OBS: **Apenas um dos quatro arquivos pode estar descomentado**
