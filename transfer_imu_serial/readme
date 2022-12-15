@@ -1,0 +1,15 @@
+# Utilizar os códigos
+Possui código referente para a transferência dos arquivos da IMU gravados no M5StickC para o computador atráves utilizando Serial (usb).
+Para realizar a transferência:
+
+1. *Upar* o código "send_files_serial.ino" para o M5StickC
+2. Executar o código *serial_port.py*
+    - python serial_port.py
+    - O código foi testado na versão 3.10.6 de Python
+    - Utiliza a biblioteca pyserial que pode ser instalada com o comando *pip install pyserial*
+    - Antes de executar o código, altere o caminho absoluto na variável *ROOT* para a pasta que desejar
+3. Para iniciar a transferência, aperte e solte o botão *home* do M5StickC
+
+<span style="color: red">Importante: *serial_port.py* deve ser executado antes de iniciar a transferência</span>
+
+- Em *imu_data/* estão os arquivos gerados por teste

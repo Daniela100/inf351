@@ -1,0 +1,26 @@
+# Utilizando o módulo IMU
+- Para utilizar o IMU do M5StickC, a unidade deve ser iniciada com <code>M5.IMU.Init()</code>
+- Obtendo dados do acelerômetro: função <code>void getAccelData(float *ax, float *ay, float *az)</code>
+```
+float accX = 0.0f;
+float accY = 0.0f;
+float accZ = 0.0f;
+
+M5.IMU.getAccelData(&accX, &accY, &accZ);
+```
+- Obtendo dados do giroscópio: função <code>void getGyroData(float *gx, float *gy, float *gz)</code>
+```
+float gyroX = 0.0f;
+float gyroY = 0.0f;
+float gyroZ = 0.0f;
+
+M5.IMU.getGyroData(&gyroX, &gyroY, &gyroZ);
+```
+- Obtendo dados de eixos de controle de aeronave: função <code>void getAhrsData(float *pitch, float *roll, float *yaw)</code>
+```
+float pitch = 0.0f;
+float roll = 0.0f;
+float yaw = 0.0f;
+
+M5.IMU.getGyroData(&pitch, &roll, &yaw);
+```

@@ -1,0 +1,8 @@
+# Utilizando o código
+Possui código que coleta e armazena os dados do IMU utilizando o M5StickC.
+
+Por padrão, os dados do IMU serão coletados durante 1 minuto em intervalos de 500 milisegundos. Para alterar o tempo de coleta, basta alterar o valor na variável *RECORD_TIME* considerando minutos. Para alterar o intervalo de coleta, altere a variável *GAP*.
+
+Os arquivos serão armazenados com nome *n.txt*, com n=0,1,2,...
+
+Após upar o código *storage_imu.ino*, basta apertar o botão home do M5StickC. O início da gravação dos dados da IMU serão indicados por sinal vermelho no display.

@@ -1,0 +1,11 @@
+# Utilizar os códigos
+1. Configurar a rede WiFi no código *transfer_mqtt.ino*
+    - Linha 14: nome da rede
+    - Linha 15: senha da rede
+2. *Upar* o código *transfer_mqtt.ino* com as alterações necessárias para o M5StickC
+3. Após a conexão com o Broker pelo M5StickC, execute o código *mqttClient.py* e a transferência irá iniciar automaticamente
+    - python mqttClient.py
+    - O código foi testado na versão 3.10.6 de Python
+    - Utiliza a biblioteca paho-mqtt que pode ser instalada com o comando *pip install paho-mqtt*
+
+- Em *IMU_DATA/* estão os arquivos gerados por teste
