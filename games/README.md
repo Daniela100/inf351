@@ -1,7 +1,20 @@
+Para interagir com o menu, pressionar o botão HOME (A)
+Para selecionar o jogo, pressionar o botão B
+
+To do: trocar de jogo sem ser necessário reiniciar o M5StickC
+
+## Flappy Bird
+- Único botão de interação é o HOME
+
+## Dices
+- Balançar o M5StickC para "jogar" os dados
+- Pressionar o botão HOME irá selecionar um dos dados para não ser "jogado"
+
+## Watch Invader
+- Para atirar, pressionar o botão HOME
+- A movimentação da nave é feita utilizando IMU
+
 # Código fonte dos jogos
 - [Flappy Bird](https://github.com/m5stack/M5StickC/blob/master/examples/Games/FlappyBird/FlappyBird.ino)
 - [Dices](https://github.com/m5stack/M5StickC/blob/master/examples/Games/Dices/Dices.ino)
 - [Watch Invader](https://github.com/phillowcompiler/WatchInvader_M5StickC)
-- [Tetris](https://github.com/m5stack/M5Stack/blob/master/examples/Games/Tetris/Tetris.ino) (Para M5Stack)
-- [One Button Game](https://github.com/VolosR/OneButton/tree/main/OneButton) (Para M5StickC Plus)
-- [Breakout](https://github.com/VolosR/M5StickCPlusBrakeout/tree/main/M5Brakeout) (Para M5StickC Plus)
